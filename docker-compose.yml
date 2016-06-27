@@ -22,7 +22,7 @@ services:
 
   gitlab:
     restart: always
-    image: sameersbn/gitlab:8.9.1
+    image: gionu/gitlab-ipynb:8.9.1
     depends_on:
     - redis
     - postgresql
@@ -44,8 +44,8 @@ services:
     - REDIS_HOST=redis
     - REDIS_PORT=6379
 
-    - TZ=Asia/Kolkata
-    - GITLAB_TIMEZONE=Kolkata
+    - TZ=Asia/Tokyo
+    - GITLAB_TIMEZONE=Tokyo
 
     - GITLAB_HTTPS=false
     - SSL_SELF_SIGNED=false

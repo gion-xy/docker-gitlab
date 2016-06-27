@@ -1,7 +1,7 @@
 FROM sameersbn/ubuntu:14.04.20160608
-MAINTAINER sameer@damagehead.com
+MAINTAINER gion_XY@live.jp
 
-ENV GITLAB_VERSION=8.9.1 \
+ENV GITLAB_BRANCH_NAME=8-9-stable-blob-ipython-notebook \
     GITLAB_SHELL_VERSION=3.0.0 \
     GITLAB_WORKHORSE_VERSION=0.7.5 \
     GOLANG_VERSION=1.5.3 \
@@ -33,6 +33,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E1DD270288B4E60
       libmysqlclient18 libpq5 zlib1g libyaml-0-2 libssl1.0.0 \
       libgdbm3 libreadline6 libncurses5 libffi6 \
       libxml2 libxslt1.1 libcurl3 libicu52 \
+      pandoc \
  && update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX \
  && locale-gen en_US.UTF-8 \
  && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales \

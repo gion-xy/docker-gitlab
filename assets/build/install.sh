@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-GITLAB_CLONE_URL=https://github.com/gitlabhq/gitlabhq.git
+GITLAB_CLONE_URL=https://github.com/martijnvermaat/gitlabhq.git
 GITLAB_SHELL_URL=https://gitlab.com/gitlab-org/gitlab-shell/repository/archive.tar.gz
 GITLAB_WORKHORSE_URL=https://gitlab.com/gitlab-org/gitlab-workhorse/repository/archive.tar.gz
 
@@ -11,7 +11,8 @@ BUILD_DEPENDENCIES="gcc g++ make patch pkg-config cmake paxctl \
   libc6-dev ruby2.1-dev \
   libmysqlclient-dev libpq-dev zlib1g-dev libyaml-dev libssl-dev \
   libgdbm-dev libreadline-dev libncurses5-dev libffi-dev \
-  libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev"
+  libxml2-dev libxslt-dev libcurl4-openssl-dev libicu-dev \
+  python-dev"
 
 ## Execute a command as GITLAB_USER
 exec_as_git() {
@@ -22,7 +23,7 @@ exec_as_git() {
   fi
 }
 
-# install build dependencies for gem installation
+# install build dependencies for gem and python package installation
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y ${BUILD_DEPENDENCIES}
 
@@ -78,8 +79,11 @@ PATH=/tmp/go/bin:$PATH GOROOT=/tmp/go make install
 rm -rf ${GITLAB_BUILD_DIR}/go${GOLANG_VERSION}.linux-amd64.tar.gz /tmp/go
 
 # shallow clone gitlab-ce
-echo "Cloning gitlab-ce v.${GITLAB_VERSION}..."
-exec_as_git git clone -q -b v${GITLAB_VERSION} --depth 1 ${GITLAB_CLONE_URL} ${GITLAB_INSTALL_DIR}
+echo "Cloning gitlab-ce (${GITLAB_BRANCH_NAME})..."
+exec_as_git git clone -q -b ${GITLAB_BRANCH_NAME} --depth 1 ${GITLAB_CLONE_URL} ${GITLAB_INSTALL_DIR}
+
+# change nbconvert command
+exec_as_git sed -i -e 's/ipython nbconvert/jupyter nbconvert/' ${GITLAB_INSTALL_DIR}/config/initializers/1_settings.rb
 
 # remove HSTS config from the default headers, we configure it in nginx
 exec_as_git sed -i "/headers\['Strict-Transport-Security'\]/d" ${GITLAB_INSTALL_DIR}/app/controllers/application_controller.rb
@@ -325,6 +329,11 @@ autorestart=true
 stdout_logfile=${GITLAB_LOG_DIR}/supervisor/%(program_name)s.log
 stderr_logfile=${GITLAB_LOG_DIR}/supervisor/%(program_name)s.log
 EOF
+
+# install nbconvert
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install --no-cache-dir ipython nbconvert
+pip uninstall -y pip wheel setuptools
 
 # purge build dependencies and cleanup apt
 DEBIAN_FRONTEND=noninteractive apt-get purge -y --auto-remove ${BUILD_DEPENDENCIES}
