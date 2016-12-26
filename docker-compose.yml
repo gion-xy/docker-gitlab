@@ -44,21 +44,21 @@ services:
     - REDIS_HOST=redis
     - REDIS_PORT=6379
 
-    - TZ=Asia/Kolkata
-    - GITLAB_TIMEZONE=Kolkata
+    - TZ=Asia/Tokyo
+    - GITLAB_TIMEZONE=Tokyo
 
     - GITLAB_HTTPS=false
     - SSL_SELF_SIGNED=false
 
-    - GITLAB_HOST=localhost
+    - GITLAB_HOST=kawa01.local
     - GITLAB_PORT=10080
     - GITLAB_SSH_PORT=10022
     - GITLAB_RELATIVE_URL_ROOT=
-    - GITLAB_SECRETS_DB_KEY_BASE=long-and-random-alphanumeric-string
-    - GITLAB_SECRETS_SECRET_KEY_BASE=long-and-random-alphanumeric-string
-    - GITLAB_SECRETS_OTP_KEY_BASE=long-and-random-alphanumeric-string
+    - GITLAB_SECRETS_DB_KEY_BASE=r8wLGKdMMfgkwNnpfFXXNC4m4j2MT2zKLf2593ZVw79BrqG4D6CVR5CV6TC9vdst
+    - GITLAB_SECRETS_SECRET_KEY_BASE=AhcaeTeK0yailae3ohmuafai2aa0oV9chaebohB7Aiph6Odeth3die3mieb3choh
+    - GITLAB_SECRETS_OTP_KEY_BASE=thai7shi8Ai6nae5neigie0beg6kee4pei3iezeec6caejio0sae9iecaephaPha
 
-    - GITLAB_ROOT_PASSWORD=
+    - GITLAB_ROOT_PASSWORD=toDDaog1
     - GITLAB_ROOT_EMAIL=
 
     - GITLAB_NOTIFY_ON_BROKEN_BUILDS=true
@@ -148,3 +148,14 @@ services:
     - OAUTH_AZURE_API_KEY=
     - OAUTH_AZURE_API_SECRET=
     - OAUTH_AZURE_TENANT_ID=
+
+    - GITLAB_SIGNUP_ENABLED=false
+    - LDAP_ENABLED=true
+    - LDAP_HOST=192.168.12.101
+    - LDAP_PORT=636
+    - LDAP_UID=uid
+    - LDAP_METHOD=ssl
+    - LDAP_BIND_DN=cn=GitLab,cn=Manager,dc=kato-lab,dc=local
+    - LDAP_PASS=gitlab
+    - LDAP_ACTIVE_DIRECTORY=false
+    - LDAP_BASE=ou=People,dc=kato-lab,dc=local
